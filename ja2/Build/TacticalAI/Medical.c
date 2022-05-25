@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "AI All.h"
 #else
+	#include "Language Defines.h"
 	#include "types.h"
 	#include "wcheck.h"
 	#include "Soldier Control.h"
@@ -196,6 +197,22 @@ BOOLEAN CanCharacterAutoBandageTeammate( SOLDIERTYPE *pSoldier )
 	{
 		return( TRUE );
 	}
+	
+	#ifdef MARTY2LIFE
+	// Marty2life Finde das FIRSTAIDKIT in den Anzügen ////////////////////////////////	
+	if ( (pSoldier->bLife >= OKLIFE) && !(pSoldier->bCollapsed) && (pSoldier->bMedical > 0))
+	{
+		INT8	bLoop;
+		for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
+		{
+			if ( ItemGetMedAttachments( &(pSoldier->inv[bLoop] ) ) != NO_SLOT);	
+			{
+				return( TRUE );
+			}
+		}
+	}
+	///////////////////////////////////////////////////////////////////////////////////	
+	#endif
 
 	return( FALSE );
 }
@@ -414,9 +431,30 @@ INT8 DecideAutoBandage( SOLDIERTYPE * pSoldier )
 	bSlot = FindObjClass( pSoldier, IC_MEDKIT );
 	if (bSlot == NO_SLOT)
 	{
-		// no medical kit!
-		return( AI_ACTION_NONE );
+
+		#ifdef MARTY2LIFE
+		// Marty2life Finde das FIRSTAIDKIT in den Anzügen ////////////////////////////////	
+		if ( (pSoldier->bLife >= OKLIFE) && !(pSoldier->bCollapsed) && (pSoldier->bMedical > 0))
+		{
+			INT8	bLoop;
+			for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
+			{
+				bSlot = ItemGetMedAttachments( &(pSoldier->inv[bLoop] ));
+				if (bSlot == NO_SLOT)
+				{
+					// no medical kit!
+					return( AI_ACTION_NONE );
+				}
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////	
+		#else
+			// no medical kit!
+			return( AI_ACTION_NONE );
+		#endif
+
 	}
+	
 
 	if (pSoldier->bBleeding)
 	{

@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "Language Defines.h"
 	#include "SkillCheck.h"
 	#include "Soldier Profile.h"
 	#include "Random.h"
@@ -247,8 +248,27 @@ INT32 SkillCheck( SOLDIERTYPE * pSoldier, INT8 bReason, INT8 bChanceMod )
 			bSlot = FindObj( pSoldier, LOCKSMITHKIT );
 			if (bSlot == NO_SLOT)
 			{
-				// this should never happen, but might as well check...
+				#ifdef MARTY2LIFE
+				// Marty2life Finde das Schlosserkit in den Anzügen
+				INT8	bLoop;
+				for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
+				{
+					bSlot = FindAttachment( &(pSoldier->inv[bLoop]), LOCKSMITHKIT );	
+					if  ( bSlot != ITEM_NOT_FOUND )
+					{
+							break;
+					}
+				}
+
+				if  ( bSlot == ITEM_NOT_FOUND )
+				{
+					// this should never happen, but might as well check...
+					iSkill = 0;
+				}
+				// ////////////////////////////////////////////////////
+				#else
 				iSkill = 0;
+				#endif
 			}
 			iSkill = iSkill * pSoldier->inv[bSlot].bStatus[0] / 100;
 			break;

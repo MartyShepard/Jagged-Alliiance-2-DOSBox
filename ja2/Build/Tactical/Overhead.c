@@ -5184,9 +5184,15 @@ void HandleTeamServices( UINT8 ubTeamNum )
 							if ( bSlot != NO_SLOT )
 							{
 								SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot] ) );
+
+								// 
+													//if ( ( Item[ pObject->usAttachItem[ cnt ] ].usItemClass == IC_GUN ) || ( Item[ pObject->usAttachItem[ cnt ] ].usItemClass == IC_LAUNCHER ) )
+
+								//SwapObjs( &(pTeamSoldier->inv[HANDPOS]), &(pTeamSoldier->inv[bSlot]->(pTeamSoldier->usAttachItem[ cnt ] )));
+								//SwapObjs( &(pTeamSoldier->inv[HANDPOS]), Item[ &(pTeamSoldier->inv[bSlot] ).usAttachItem[ bSlot ] ]);
 							}
 							else
-              {
+							{
 								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ MERC_IS_OUT_OF_BANDAGES_STR ], pTeamSoldier->name );
 								GivingSoldierCancelServices( pTeamSoldier );
 
@@ -5194,8 +5200,7 @@ void HandleTeamServices( UINT8 ubTeamNum )
 								{
 									DoMercBattleSound( pTeamSoldier, (INT8)( BATTLE_SOUND_CURSE1 ) );
 								}
-
-              }
+							}
 						}
 					}
 				}

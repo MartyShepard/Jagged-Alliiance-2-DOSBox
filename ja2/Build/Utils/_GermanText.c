@@ -581,7 +581,7 @@ STR16 pAssignMenuStrings[] =
 	L"Doktor", // the merc is acting as a doctor
 	L"Patient", // the merc is receiving medical attention
 	L"Fahrzeug", // the merc is in a vehicle
-	L"Repar.", // the merc is repairing items 
+	L"Reparieren", // the merc is repairing items 
 	L"Training", // the merc is training
 	L"Abbrechen", // cancel this menu
 };
@@ -700,7 +700,7 @@ STR16 gzMercSkillText[] =
 STR16 pTacticalPopupButtonStrings[] =
 {
 	L"|Stehen/Gehen",
-	L"Kauern/Kauernd bewegen (|C)",
+	L"Kauern/Duckend bewegen (|C)",
 	L"Stehen/|Rennen",
 	L"Hinlegen/Kriechen (|P)",
 	L"Schauen (|L)",
@@ -711,8 +711,8 @@ STR16 pTacticalPopupButtonStrings[] =
 	//Pop up door menu
 	L"Manuell öffnen",
 	L"Auf Fallen untersuchen",
-	L"Dietrich",
-	L"Mit Gewalt öffnen",
+	L"Schloss Knacken",
+	L"Mit Gewalt ?",
 	L"Falle entschärfen",
 	L"Abschließen",
 	L"Aufschließen",
@@ -727,9 +727,9 @@ STR16 pDoorTrapStrings[] =
 {
 	L"keine Falle",
 	L"eine Sprengstoffalle",
-	L"eine elektrische Falle",
-	L"eine Falle mit Sirene",
-	L"eine Falle mit stummem Alarm",
+	L"eine Elektrische Falle",
+	L"eine Sirenen Falle",
+	L"eine Falle mit stummen Alarm",
 };
 
 // Contract Extension. These are used for the contract extension with AIM mercenaries.
@@ -1135,10 +1135,10 @@ UINT16 TacticalStr[][ MED_STRING_LENGTH ] =
 	L"%s hat nicht den richtigen Schlüssel.",
 	L"Die Falle am Schloß ist entschärft.",
 	L"Das Schloß hat keine Falle.",
-	L"Geschl.",
+	L"Verschlos.", // Geschl.	  
 	L"TÜR",
 	L"FALLE AN",
-	L"Geschl.",
+	L"Abgeschlo.", //Geschl.
 	L"GEÖFFNET",
 	L"EINGETRETEN",
 	L"Hier ist ein Schalter. Betätigen?",
@@ -1182,7 +1182,7 @@ UINT16 TacticalStr[][ MED_STRING_LENGTH ] =
 
 	// In the next string, %s is a name
 
-	L"%s wird eskortiert von Trupp %d.",
+	L"%s wurde rekrutiert.",
 
 	// Here %s is a name and %d is a number
 
@@ -1774,9 +1774,9 @@ STR16 pMoralStrings[] =
 {
 	L"Super", 
 	L"Gut",
-	L"Stabil",
-	L"Schlecht",
-	L"Panik",
+	L"Normal", //stabil
+	L"Stabil", //Schlecht
+	L"Übel", //Panik
 	L"Mies",
 };
 
@@ -2186,7 +2186,7 @@ STR16 gsAtmStartButtonText[] =
 
 STR16 sATMText[] = 
 {
-	L"Geld überw.?", 		// transfer funds to merc?
+	L"Geld überweisen?", 		// transfer funds to merc?
 	L"Ok?", 			// are we certain?
 	L"Betrag eingeben", 		// enter the amount you want to transfer to merc
 	L"Art auswählen", 		// select the type of transfer to merc
@@ -3418,8 +3418,8 @@ STR16 pMessageStrings[] =
 	L"Version", 
 	L"Leerer Quick-Save-Slot",
 	L"Dieser Slot ist nur für Quick-Saves aus den Map Screens und dem Taktik-Bildschirm. Speichern mit ALT+S",
-	L"offen",
-	L"zu",
+	L"Schliessen",
+	L"Öffnen ?",
 #ifdef JA2DEMO
 	L"Hier unten sind Sie fertig. Vielleicht sollten Sie mit Gabby reden.",
 	L"Vielleicht hätten Sie ihn besser nicht getötet.",
@@ -3451,7 +3451,8 @@ STR16 pMessageStrings[] =
 	L"Kein Platz, um %s an %s weiterzugeben.", //pass "item" to "merc". Same instructions as above.
 
 	//A list of attachments appear after the items. Ex: Kevlar vest ( Ceramic Plate 'Attached )'
-	L" angebracht )",
+	L" angebracht )", //Marty2Life
+	//L"",
 
 	//Cheat modes
 	L"Cheat-Level EINS erreicht",
@@ -3706,7 +3707,7 @@ STR16	gzCreditNameFunny[]=
 
 STR16 sRepairsDoneString[] =
 {
-	L"%s hat  seine eigenen Gegenstände repariert",
+	L"%s hat seine eigenen Gegenstände repariert",
 	L"%s hat die Waffen und Rüstungen aller Teammitglieder repariert",
 	L"%s hat die aktivierten Gegenstände aller Teammitglieder repariert",
 	L"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
@@ -3762,7 +3763,7 @@ STR16 gzLateLocalizedString[] =
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%s ist am Bein getroffen und hingefallen!",
+	L"%s erlitt'n Beinschuss. Das is' zuviel ...",
 	//Name can't speak right now.
 	L"%s kann gerade nicht sprechen.",
 
@@ -3794,7 +3795,7 @@ STR16 gzLateLocalizedString[] =
 	L"(Trupp %d)",
 
 	//35
-	L"%s reparierte %ss %s", 
+	L"%s reparierte %s's: %s", 
 
 	//36
 	L"BLOODCAT", 
@@ -3850,7 +3851,7 @@ STR16 gzLateLocalizedString[] =
 	//59
 	L"John und Mary eskortieren?",
 
-  L"Switch Activated.",
+    L"Mechanismus wurde asugelöst ...",
 
 };
 

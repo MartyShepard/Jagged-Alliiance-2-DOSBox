@@ -22,6 +22,8 @@ extern INT8 FindLaunchable( SOLDIERTYPE * pSoldier, UINT16 usWeapon );
 extern INT8 FindGLGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindThrowableGrenade( SOLDIERTYPE * pSoldier );
 extern INT8 FindUsableObj( SOLDIERTYPE * pSoldier, UINT16 usItem );
+extern INT8 ItemGetNumAttachments( OBJECTTYPE * pObj );								// Marty2Life
+extern INT8 ItemGetMedAttachments( OBJECTTYPE * pObj );								// Marty2Life
 
 extern void DeleteObj(OBJECTTYPE * pObj );
 extern void CopyObj( OBJECTTYPE * pSourceObj, OBJECTTYPE * pTargetObj );
@@ -169,9 +171,9 @@ UINT32 MoneySlotLimit( INT8 bSlot );
 void CheckEquipmentForFragileItemDamage( SOLDIERTYPE *pSoldier, INT32 iDamage );
 
 // Range of Xray device
-#define XRAY_RANGE 40
+#define XRAY_RANGE 95 // Marty2Life, was 40/  Show me more
 // Seconds that Xray lasts
-#define XRAY_TIME 5
+#define XRAY_TIME 17  // Marty2Life, was 5, More Time
 
 extern void ActivateXRayDevice( SOLDIERTYPE * pSoldier );
 extern void TurnOffXRayEffects( SOLDIERTYPE * pSoldier );

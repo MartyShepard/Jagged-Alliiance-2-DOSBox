@@ -3,7 +3,8 @@
 #else
 	#include <stdio.h>
 	#include <stdarg.h>
-	#include <time.h> 
+	#include <time.h>
+	#include "Language Defines.h"
 	#include "sgp.h" 
 	#include "gameloop.h"
 	#include "himage.h"
@@ -2267,11 +2268,50 @@ void PopupDoorOpenMenu( BOOLEAN fClosingDoor )
 		DisableButton( iActionIcons[ LOCKPICK_DOOR_ICON ] );
 	}
 
+	//INT8	bLoop;
+
+	//for (bLoop = bLower; bLoop <= bUpper; bLoop++)
+	//{
+	//	if (pSoldier->inv[bLoop].usItem == 0)
+	//	{
+	//		if (bLoop == SECONDHANDPOS && Item[pSoldier->inv[HANDPOS].usItem].fFlags & ITEM_TWO_HANDED)
+	//		{
+	//			continue;
+	//		}
+	//		else
+	//		{
+	//			return( bLoop );
+	//		}
+	//	}
+	//}
+	//return( ITEM_NOT_FOUND );
 
 	// Grayout if no lockpick found....
 	if ( FindObj( gOpenDoorMenu.pSoldier, LOCKSMITHKIT ) == NO_SLOT )
 	{
+		
+		#ifdef MARTY2LIFE
+		// Marty2life Finde das Schlosserkit in den Anzügen
+		INT8	bfound = ITEM_NOT_FOUND;
+		INT8	bLoop;
+		for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
+		{
+			bfound = FindAttachment( &(gOpenDoorMenu.pSoldier->inv[bLoop]), LOCKSMITHKIT );	
+			if  ( bfound != ITEM_NOT_FOUND )
+			{
+					break;
+			}
+		}
+
+		if  ( bfound == ITEM_NOT_FOUND )
+		{
+			DisableButton( iActionIcons[ LOCKPICK_DOOR_ICON ] );
+		}
+		// ////////////////////////////////////////////////////
+		#else
 		DisableButton( iActionIcons[ LOCKPICK_DOOR_ICON ] );
+		#endif
+
 	}
 
 

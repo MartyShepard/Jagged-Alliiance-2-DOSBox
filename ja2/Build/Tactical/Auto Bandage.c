@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "Language Defines.h"
 	#include "sgp.h"
 	#include "overhead.h"
 	#include "messageboxscreen.h"
@@ -124,12 +125,29 @@ void BeginAutoBandage( )
 		if ( FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT )
 		{
 			fFoundAMedKit = TRUE;
-			if ( fFoundAGuy && fFoundAMedKit )
+		} 
+
+		#ifdef MARTY2LIFE
+		// Marty2life Finde das FIRSTAIDKIT in den Anzügen ////////////////////////////////
+		if ( !fFoundAMedKit )
+		{
+			INT8	bLoop;
+			for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
 			{
-				break;
-			}	
+				if ( ItemGetMedAttachments( &(pSoldier->inv[bLoop]) ) != NO_SLOT )				
+				{
+					fFoundAMedKit = TRUE;
+					break;
+				}
+			}
 		}
-	
+		///////////////////////////////////////////////////////////////////////////////////		
+		#endif
+
+		if ( fFoundAGuy && fFoundAMedKit )
+		{
+			break;
+		}					
 	}
 
 	if ( !fFoundAGuy )
@@ -306,23 +324,50 @@ BOOLEAN HandleAutoBandage( )
 
 BOOLEAN CreateAutoBandageString( void )
 {
-	INT32						cnt;
-	UINT8						ubDoctor[20], ubDoctors = 0;
-	UINT32					uiDoctorNameStringLength = 1; // for end-of-string character
-	STR16						sTemp;
+	INT32				cnt;
+	UINT8				ubDoctor[20], ubDoctors = 0;
+	UINT32				uiDoctorNameStringLength = 1; // for end-of-string character
+	STR16				sTemp;
 	SOLDIERTYPE *		pSoldier;
+	BOOLEAN				bMedikitFound = FALSE;
 
 	cnt = gTacticalStatus.Team[ OUR_TEAM ].bFirstID;
 	for ( pSoldier = MercPtrs[ cnt ]; cnt <= gTacticalStatus.Team[ OUR_TEAM ].bLastID; cnt++,pSoldier++)
 	{
-		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->bMedical > 0 && FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
+		if ( pSoldier->bActive && pSoldier->bInSector && pSoldier->bLife >= OKLIFE && !(pSoldier->bCollapsed) && pSoldier->bMedical > 0)
 		{
-			ubDoctor[ubDoctors] = pSoldier->ubID;
-			ubDoctors++;
-			// increase the length of the string by the size of the name
-			// plus 2, one for the comma and one for the space after that
-			uiDoctorNameStringLength += wcslen( pSoldier->name ) + 2;
+			if (FindObjClass( pSoldier, IC_MEDKIT ) != NO_SLOT)
+			{
+				bMedikitFound = TRUE;
+			}
+			
+			#ifdef MARTY2LIFE
+			// Marty2life Finde das FIRSTAIDKIT in den Anzügen ////////////////////////////////
+			if (! bMedikitFound)
+			{
+				INT8	bLoop;
+				for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
+				{
+					if ( ItemGetMedAttachments( &(pSoldier->inv[bLoop]) ) != NO_SLOT )				
+					{
+						bMedikitFound = TRUE;
+						break;
+					}
+				}
+			}
+			///////////////////////////////////////////////////////////////////////////////////	
+			#endif
+
+			if (bMedikitFound)
+			{
+				ubDoctor[ubDoctors] = pSoldier->ubID;
+				ubDoctors++;
+				// increase the length of the string by the size of the name
+				// plus 2, one for the comma and one for the space after that
+				uiDoctorNameStringLength += wcslen( pSoldier->name ) + 2;
+			}
 		}
+
 	}
 	if (ubDoctors == 0)
 	{

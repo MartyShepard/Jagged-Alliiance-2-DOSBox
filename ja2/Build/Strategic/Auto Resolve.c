@@ -3,6 +3,7 @@
 #else
 	#include <stdio.h>
 	#include "types.h"
+	#include "Language Defines.h"
 	#include "Auto Resolve.h"
 	#include "Strategic Movement.h"
 	#include "Queen Command.h"
@@ -1364,6 +1365,7 @@ OBJECTTYPE* FindMedicalKit()
 {
 	INT32 i;
 	INT32 iSlot;
+	INT32 iMKit;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
 		iSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT );
@@ -1371,6 +1373,19 @@ OBJECTTYPE* FindMedicalKit()
 		{
 			return( &gpMercs[ i ].pSoldier->inv[ iSlot ] );
 		}
+
+		#ifdef MARTY2LIFE
+		// Marty2life Finde das FIRSTAIDKIT in den Anzügen ////////////////////////////////		
+		for (iSlot = HELMETPOS; iSlot <= LEGPOS; iSlot++)
+		{
+			iMKit = ItemGetMedAttachments( &(gpMercs[ i ].pSoldier->inv[iSlot] ) );				
+			if ( iMKit != NO_SLOT )
+			{
+				return( &gpMercs[ i ].pSoldier->inv[ iSlot ] );
+			}
+		}
+		///////////////////////////////////////////////////////////////////////////////////	
+		#endif
 	}
 	return NULL;
 }
@@ -1383,43 +1398,45 @@ UINT32 AutoBandageMercs()
 	OBJECTTYPE *pKit = NULL;
 	BOOLEAN fFound = FALSE;
 	BOOLEAN fComplete = TRUE;
-	INT8 bSlot, cnt;
+	INT8 bSlot, cnt, iKitSlot = -1;
 
 	//Do we have any doctors?  If so, bandage selves first.
 	fFound = FALSE;
 	uiMaxPointsUsed = uiParallelPointsUsed = 0;
 	for( i = 0; i < gpAR->ubMercs; i++ )
 	{
-		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE && 
-			  !gpMercs[ i ].pSoldier->bCollapsed && 
-				gpMercs[ i ].pSoldier->bMedical > 0 &&
-				( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
+		if( gpMercs[ i ].pSoldier->bLife >= OKLIFE &&  !gpMercs[ i ].pSoldier->bCollapsed && gpMercs[ i ].pSoldier->bMedical > 0)						
 		{
-			fFound = TRUE;
-			//bandage self first!
-			uiCurrPointsUsed = 0;
-			cnt = 0;
-			while( gpMercs[ i ].pSoldier->bBleeding )
+			bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT );
+			if ( bSlot != NO_SLOT )
 			{
-				pKit = &gpMercs[ i ].pSoldier->inv[ bSlot ];
-				usKitPts = TotalPoints( pKit );
-				if( !usKitPts )
-				{ //attempt to find another kit before stopping
-					if( ( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) ) != NO_SLOT )
-					  continue;
-					break;
+				fFound = TRUE;
+				//bandage self first!
+				uiCurrPointsUsed = 0;
+				cnt = 0;
+			
+				while( gpMercs[ i ].pSoldier->bBleeding )
+				{
+					pKit = &gpMercs[ i ].pSoldier->inv[ bSlot ];
+					usKitPts = TotalPoints( pKit );
+					if( !usKitPts )
+					{ //attempt to find another kit before stopping
+						if ( bSlot = FindObjClass( gpMercs[ i ].pSoldier, IC_MEDKIT ) != NO_SLOT ) 
+							continue;
+						break;
+					}
+					uiPointsUsed = VirtualSoldierDressWound( gpMercs[ i ].pSoldier, gpMercs[ i ].pSoldier, pKit, usKitPts, usKitPts );
+					UseKitPoints( pKit, (UINT16)uiPointsUsed, gpMercs[ i ].pSoldier );
+					uiCurrPointsUsed += uiPointsUsed;
+					cnt++;
+					if( cnt > 50 )
+						break;
 				}
-				uiPointsUsed = VirtualSoldierDressWound( gpMercs[ i ].pSoldier, gpMercs[ i ].pSoldier, pKit, usKitPts, usKitPts );
-				UseKitPoints( pKit, (UINT16)uiPointsUsed, gpMercs[ i ].pSoldier );
-				uiCurrPointsUsed += uiPointsUsed;
-				cnt++;
-				if( cnt > 50 )
+				if( uiCurrPointsUsed > uiMaxPointsUsed )
+					uiMaxPointsUsed = uiCurrPointsUsed;
+				if( !pKit )
 					break;
 			}
-			if( uiCurrPointsUsed > uiMaxPointsUsed )
-				uiMaxPointsUsed = uiCurrPointsUsed;
-			if( !pKit )
-				break;
 		}
 	}
 
@@ -1465,10 +1482,12 @@ UINT32 AutoBandageMercs()
 	}
 	if( fComplete )
 	{
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"gzLateLocalizedString[ 13 ]" );
 		DoScreenIndependantMessageBox( gzLateLocalizedString[ 13 ], MSG_BOX_FLAG_OK, AutoBandageFinishedCallback );
 	}
 	else
 	{
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"gzLateLocalizedString[ 10 ]" );
 		DoScreenIndependantMessageBox( gzLateLocalizedString[ 10 ], MSG_BOX_FLAG_OK, AutoBandageFinishedCallback );
 	}
 

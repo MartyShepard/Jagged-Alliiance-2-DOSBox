@@ -2055,8 +2055,64 @@ void INVRenderItem( UINT32 uiBuffer, SOLDIERTYPE * pSoldier, OBJECTTYPE  *pObjec
 				}
 
 				sNewY = sY;
-				swprintf( pStr, L"*" );
+				
+				#ifdef MARTY2LIFE
+				/*      
+					Marty2Life, Shows how many slots are still free.
+					* = Slots are Full for this Attachment
+					Vest and Color Blue mean there is a CERAMIC_PLATE attached 
+				*/
+				if ( pSoldier && pObject == &(pSoldier->inv[HELMETPOS] ) )
+				{			
+					INT8 iSlots = 0;
+					iSlots = ItemGetNumAttachments( &(pSoldier->inv[HELMETPOS]) );
+					switch (iSlots)
+					{
+						case 1:	swprintf( pStr, L"3" );	break;
+						case 2:	swprintf( pStr, L"2" );	break;
+						case 3:	swprintf( pStr, L"1" );	break;
+						case 4:	swprintf( pStr, L"*" );	break;
+					}					
+				}
 
+				else if ( pSoldier && pObject == &(pSoldier->inv[VESTPOS] ) )
+				{	
+					INT8 iSlots = 0;
+					if ( FindAttachment( pObject, CERAMIC_PLATES ) != NO_SLOT )
+					{
+						SetFontForeground( FONT_LTBLUE );
+					}										
+					iSlots = ItemGetNumAttachments( &(pSoldier->inv[VESTPOS]) );
+					switch (iSlots)
+					{
+						case 1:	swprintf( pStr, L"3" );	break;
+						case 2:	swprintf( pStr, L"2" );	break;
+						case 3:	swprintf( pStr, L"1" );	break;
+						case 4:	swprintf( pStr, L"*" );	break;
+					}					
+				}
+				else if ( pSoldier && pObject == &(pSoldier->inv[LEGPOS] ) )
+				{			
+					INT8 iSlots = 0;				
+					iSlots = ItemGetNumAttachments( &(pSoldier->inv[LEGPOS]) );
+					switch (iSlots)
+					{
+						case 1:	swprintf( pStr, L"3" );	break;
+						case 2:	swprintf( pStr, L"2" );	break;
+						case 3:	swprintf( pStr, L"1" );	break;
+						case 4:	swprintf( pStr, L"*" );	break;
+					}					
+				}
+				else
+				{
+					swprintf( pStr, L"*" );
+				}
+
+				#else
+					swprintf( pStr, L"*" );
+				#endif
+				///////////////////////////////////////////////////////////////
+				
 				// Get length of string
 				uiStringLength=StringPixLength(pStr, ITEM_FONT );
 
@@ -2796,10 +2852,32 @@ void PermanantAttachmentMessageBoxCallBack( UINT8 ubExitValue )
 	// else do nothing
 }
 
+short ItemAttachmentSpecialPoints (short AP_ITEM_EXCHANGE)	// Marty2life, Dont use and Reduce always Action Point for Items
+{
+	switch ( Item[ gpItemPointer->usItem ].usItemClass )
+	{
+		case IC_MISC:
+		case IC_MEDKIT:
+		case IC_KIT:
+		case IC_GRENADE:
+		case IC_THROWING_KNIFE:
+		case IC_BLADE:
+		case IC_BOMB:
+			{
+			 return (0);
+			}
+			break;				
+		default:
+			{
+			 return (AP_ITEM_EXCHANGE);
+			}
+	}
+}
+
 void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 {
 	UINT32					uiItemPos;
-	static BOOLEAN	fRightDown = FALSE;
+	static	BOOLEAN	fRightDown = FALSE;
 
 	if ( gfItemDescObjectIsAttachment )
 	{
@@ -2822,7 +2900,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		if ( gpItemPointer != NULL )
 		{
 			// nb pointer could be NULL because of inventory manipulation in mapscreen from sector inv
-			if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, AP_RELOAD_GUN, 0, TRUE ) )
+			if ( !gpItemPointerSoldier || EnoughPoints( gpItemPointerSoldier, ItemAttachmentSpecialPoints(AP_RELOAD_GUN), 0, TRUE ) )
 			{
 				if ( (Item[ gpItemPointer->usItem ].fFlags & ITEM_INSEPARABLE) && ValidAttachment( gpItemPointer->usItem, gpItemDescObject->usItem ) )
 				{
@@ -2836,7 +2914,7 @@ void ItemDescAttachmentsCallback( MOUSE_REGION * pRegion, INT32 iReason )
 		else
 		{
       // ATE: Make sure we have enough AP's to drop it if we pick it up!
-			if ( EnoughPoints( gpItemDescSoldier, ( AP_RELOAD_GUN + AP_PICKUP_ITEM ), 0, TRUE ) )
+			if ( EnoughPoints( gpItemDescSoldier, ItemAttachmentSpecialPoints(AP_RELOAD_GUN + AP_PICKUP_ITEM), 0, TRUE ) )
 			{
 				// Get attachment if there is one
 				// The follwing function will handle if no attachment is here
@@ -3944,14 +4022,37 @@ void DeleteItemDescriptionBox( )
 
 			if (!fAllFound)
 			{
+
+				#ifdef MARTY2LIFE
+				/*
+					Marty2Life:
+					There are several classes in the attachments VESTPOS, HELMETPOS & LEGPOS.
+					Do not reduce the AP's on the standard items except loading
+				*/
+				switch ( Item[ gpItemPointer->usItem ].usItemClass )
+				{
+					case IC_MISC:
+					case IC_MEDKIT:
+					case IC_KIT:
+					case IC_GRENADE:
+					case IC_THROWING_KNIFE:
+					case IC_BLADE:
+					case IC_BOMB:
+						  break;				
+					default:
+						DeductPoints( gpAttachSoldier, AP_RELOAD_GUN, 0 );
+				}				
+				#else
 				DeductPoints( gpAttachSoldier, AP_RELOAD_GUN, 0 );
+			#endif
+				
 			}
 		}
 	}
 
 	//Remove
 	DeleteVideoObjectFromIndex( guiItemDescBox );
-  DeleteVideoObjectFromIndex( guiMapItemDescBox );
+	DeleteVideoObjectFromIndex( guiMapItemDescBox );
 	DeleteVideoObjectFromIndex( guiBullet );
 	// Delete item graphic
 	DeleteVideoObjectFromIndex( guiItemGraphic );
@@ -7138,6 +7239,7 @@ void GetHelpTextForItem( INT16 *pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldie
 			{	
 				iNumAttachments++;
 
+				/*
 				if ( iNumAttachments == 1 )
 				{
 					wcscat( pStr, L" ( " );
@@ -7146,15 +7248,34 @@ void GetHelpTextForItem( INT16 *pzStr, OBJECTTYPE *pObject, SOLDIERTYPE *pSoldie
 				{
 					wcscat( pStr, L", \n" );
 				}
-	
+				*/
+				// Marty2life
+				if ( iNumAttachments == 1 )
+				{
+					wcscat( pStr, L"\n 1: " );
+				}
+				else if  ( iNumAttachments == 2 )
+				{
+					wcscat( pStr, L"\n 2: ");
+				}
+				else if  ( iNumAttachments == 3 )
+				{
+					wcscat( pStr, L"\n 3: ");
+				}	
+				else if  ( iNumAttachments == 4 )
+				{
+					wcscat( pStr, L"\n 4: ");
+				}
 				wcscat( pStr, ItemNames[ pObject->usAttachItem[ cnt ] ] );
 			}
 		}
 
+		/*
 		if ( iNumAttachments > 0 )
 		{
 			wcscat( pStr, pMessageStrings[ MSG_END_ATTACHMENT_LIST ] );
 		}
+		*/
 	}
 	else
 	{

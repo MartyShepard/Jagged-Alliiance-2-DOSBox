@@ -99,8 +99,8 @@ extern UINT16 gzFontName[32];
 
 BOOLEAN	InitializeFonts( )
 {
-  INT16   zWinFontName[128];
-	COLORVAL Color;
+  //INT16 zWinFontName[128];
+
 
 	// Initialize fonts
 //	gpLargeFontType1  = LoadFontFile( "FONTS\\lfont1.sti" );
@@ -225,7 +225,7 @@ BOOLEAN	InitializeFonts( )
 
   //giSubTitleWinFont = CreateWinFont( -16, 0, 0,  0, FALSE, FALSE, FALSE, L"標楷體", CHINESEBIG5_CHARSET );
 	giSubTitleWinFont = CreateWinFont( -16, 0, 0,  0, FALSE, FALSE, FALSE, L"新細明體", CHINESEBIG5_CHARSET );
-
+  COLORVAL Color;
   SET_USE_WINFONTS( TRUE );
   SET_WINFONT( giSubTitleWinFont ); 
   Color = FROMRGB( 255, 255, 255 );

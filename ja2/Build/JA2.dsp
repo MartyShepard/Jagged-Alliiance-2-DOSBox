@@ -49,7 +49,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /G5 /MT /W3 /GX /Zi /O2 /I "\Standard Gaming Platform" /I ".\TileEngine" /I ".\Tactical" /I ".\Utils" /I ".\TacticalAI" /I ".\Communications" /I ".\Editor" /I ".\Strategic" /I ".\laptop" /D "NDEBUG" /D "CALLBACKTIMER" /D "WIN32" /D "_WINDOWS" /D "JA2" /D "PRECOMPILEDHEADERS" /FR /YX"JA2 All.h" /FD /O2b2 /c
+# ADD CPP /nologo /G5 /MT /W3 /GX /Zi /O2 /I "\Standard Gaming Platform" /I ".\TileEngine" /I ".\Tactical" /I ".\Utils" /I ".\TacticalAI" /I ".\Communications" /I ".\Editor" /I ".\Strategic" /I ".\laptop" /D "NDEBUG" /D "CALLBACKTIMER" /D "WIN32" /D "_WINDOWS" /D "JA2" /D "PRECOMPILEDHEADERS" /FR /YX"JA2 All.h" /FD /O2b2 /Zm1000 /c
 # ADD BASE MTL /nologo /D "NDEBUG" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"

@@ -46,7 +46,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir ".\Release"
 # PROP Target_Dir "."
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /I "\ja2\build" /I "\ja2\build\TileEngine" /I "\ja2\build\Tactical" /I "\ja2\build\Utils" /I "\ja2\build\strategic" /D "NDEBUG" /D "NO_ZLIB" /D "WIN32" /D "_WINDOWS" /D "JA2" /D "JA2_PRECOMPILED_HEADERS" /D "NO_ZLIB_COMPRESSION" /FR /YX"JA2 SGP ALL.H" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "\ja2\build" /I "\ja2\build\TileEngine" /I "\ja2\build\Tactical" /I "\ja2\build\Utils" /I "\ja2\build\strategic" /D "NDEBUG" /D "NO_ZLIB" /D "WIN32" /D "_WINDOWS" /D "JA2" /D "JA2_PRECOMPILED_HEADERS" /D "NO_ZLIB_COMPRESSION" /FR /YX"JA2 SGP ALL.H" /FD /Zm1000 /c
 # ADD BASE RSC /l 0x409
 # ADD RSC /l 0x409
 BSC32=bscmake.exe

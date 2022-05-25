@@ -5528,7 +5528,7 @@ BOOLEAN MakeSureMedKitIsInHand( SOLDIERTYPE *pSoldier )
 			return(TRUE);
 		}
 	}
-
+	
 	// no medkit items in possession!
 	return(FALSE);
 }
@@ -10592,6 +10592,7 @@ void BandageBleedingDyingPatientsBeingTreated( )
 	SOLDIERTYPE *pDoctor = NULL;
 	INT32 iKitSlot;
 	OBJECTTYPE *pKit = NULL;
+	OBJECTTYPE *pKitinAttachment = NULL;
 	UINT16 usKitPts;
 	UINT32 uiKitPtsUsed;
 	BOOLEAN fSomeoneStillBleedingDying = FALSE;
@@ -10633,10 +10634,12 @@ void BandageBleedingDyingPatientsBeingTreated( )
 					pDoctor = AnyDoctorWhoCanHealThisPatient( pSoldier, HEALABLE_EVER );
 					if ( pDoctor != NULL )
 					{
-						iKitSlot = FindObjClass( pDoctor, IC_MEDKIT );
+						BOOLEAN iKitIsAnAttachment = FALSE;
+
+						iKitSlot = FindObjClass( pDoctor, IC_MEDKIT );						
 						if( iKitSlot != NO_SLOT )
 						{
-							pKit = &( pDoctor->inv[ iKitSlot ] );
+							pKit = &( pDoctor->inv[ iKitSlot ] );				
 
 							usKitPts = TotalPoints( pKit );
 							if( usKitPts )
@@ -10651,6 +10654,8 @@ void BandageBleedingDyingPatientsBeingTreated( )
 								}
 							}
 						}
+
+
 					}
 				}
 			}

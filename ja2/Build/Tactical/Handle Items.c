@@ -1,6 +1,7 @@
 #ifdef PRECOMPILEDHEADERS
 	#include "Tactical All.h"
 #else
+	#include "Language Defines.h"
 	#include "items.h"
 	#include "Action Items.h"
 	#include "handle Items.h"
@@ -4575,28 +4576,49 @@ BOOLEAN NearbyGroundSeemsWrong( SOLDIERTYPE * pSoldier, INT16 sGridNo, BOOLEAN f
 	}
 	else
 	{
-		fMining = FALSE;
-
-		ubDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
-		/*
-		if (pSoldier->bStealthMode)
+		#ifdef MARTY2LIFE
+		// Marty2life Finde den Metal Detector in den Anzügen
+		INT8	bfound = ITEM_NOT_FOUND;
+		INT8	bLoop;
+		for (bLoop = HELMETPOS; bLoop <= LEGPOS; bLoop++)
 		{
-			ubDetectLevel++;
-		}
-		switch (pSoldier->usAnimState)
-		{
-			case CRAWLING:
-				ubDetectLevel += 2;
+			bfound = FindAttachment( &(pSoldier->inv[bLoop]), METALDETECTOR );	
+			if  ( bfound != ITEM_NOT_FOUND )
+			{
+				fMining = TRUE;
 				break;
+			}
+		}
+		#endif
 
-			case SWATTING:
+		if  ( bfound == ITEM_NOT_FOUND ) 
+		{
+			fMining = FALSE;
+
+			ubDetectLevel = CalcTrapDetectLevel( pSoldier, FALSE );
+			/*
+			if (pSoldier->bStealthMode)
+			{
 				ubDetectLevel++;
-				break;
+			}
+			switch (pSoldier->usAnimState)
+			{
+				case CRAWLING:
+					ubDetectLevel += 2;
+					break;
 
-			default:
-				break;
+				case SWATTING:
+					ubDetectLevel++;
+					break;
+
+				default:
+					break;
+			}
+			*/
 		}
-		*/
+		// ////////////////////////////////////////////////////
+
+
 	}
 
 	if (pSoldier->bSide == 0)
